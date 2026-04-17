@@ -9,7 +9,10 @@ const notesRoutes = require('./routes/notes');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://smart-student-planner-ruddy.vercel.app/'],
+  credentials: true
+}));
 app.use(express.json());
 
 // ✅ Root route (fixes your Render "/" issue)
