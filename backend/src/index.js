@@ -10,7 +10,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['https://smart-student-planner-ruddy.vercel.app/'],
+  origin: ['https://smart-student-planner-ruddy.vercel.app'],
   credentials: true
 }));
 app.use(express.json());
