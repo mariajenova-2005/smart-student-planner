@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import '../utils/app_constants.dart';
 
 class ApiService {
+  static const String baseUrl =
+      "https://student-planner-backend-aa53.onrender.com";
   static final ApiService _i = ApiService._();
   factory ApiService() => _i;
   ApiService._();
@@ -32,7 +34,7 @@ class ApiService {
         if (_token != null) 'Authorization': 'Bearer $_token',
       };
 
-  Uri _uri(String path) => Uri.parse('${AppConstants.baseUrl}$path');
+Uri _uri(String path) => Uri.parse('$baseUrl$path');
 
   Future<Map<String, dynamic>> register({required String name, required String email, required String password}) async {
     try {

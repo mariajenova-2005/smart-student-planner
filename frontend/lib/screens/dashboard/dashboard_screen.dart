@@ -6,15 +6,24 @@ import '../../providers/auth_provider.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/task_card.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
-  String _greeting() {
-    final h = DateTime.now().hour;
-    if (h < 12) return 'Good morning';
-    if (h < 17) return 'Good afternoon';
-    return 'Good evening';
-  }
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+
+class _DashboardScreenState extends State<DashboardScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      Provider.of<TaskProvider>(context, listen: false).loadTasks();
+    });
+  
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +161,7 @@ class DashboardScreen extends StatelessWidget {
       ),
     );
   }
+}
 }
 
 class _StatCard extends StatelessWidget {
