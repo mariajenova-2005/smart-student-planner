@@ -36,13 +36,7 @@ class StudentPlannerProApp extends StatelessWidget {
       ],
       child: Consumer2<ThemeProvider, AuthProvider>(
         builder: (context, themeProvider, authProvider, _) {
-          if (authProvider.isLoggedIn) {
-            context.read<TaskProvider>().loadTasks();
-            context.read<NotesProvider>().loadNotes();
-          } else {
-            context.read<TaskProvider>().clearTasks();
-            context.read<NotesProvider>().clearNotes();
-          }
+          
           return MaterialApp.router(
             title: 'Student Planner Pro',
             debugShowCheckedModeBanner: false,

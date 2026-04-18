@@ -14,18 +14,21 @@ class AuthProvider with ChangeNotifier {
   bool get initialized => _initialized;
 
   Future<void> initialize() async {
-    await _api.loadToken();
-    if (_api.hasToken) {
-      final result = await _api.getMe();
-      if (result['success'] == true) {
-        _user = UserModel.fromJson(result['user'] as Map<String, dynamic>);
-      } else {
-        await _api.clearToken();
-      }
+  await _api.loadToken();
+
+  if (_api.hasToken) {
+    final result = await _api.getMe();
+
+    if (result['success'] == true) {
+      _user = UserModel.fromJson(result['user'] as Map<String, dynamic>);
+    } else {
+      await _api.clearToken();
     }
-    _initialized = true;
-    notifyListeners();
   }
+
+  _initialized = true;
+  notifyListeners();
+}
 
   Future<String?> register({required String name, required String email, required String password}) async {
     _isLoading = true;
@@ -43,19 +46,22 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<String?> login({required String email, required String password}) async {
-    _isLoading = true;
+  _isLoading = true;
+  notifyListeners();
+
+  final result = await _api.login(email: email, password: password);
+
+  if (result['success'] == true) {
+    _user = UserModel.fromJson(result['user'] as Map<String, dynamic>);
+
     notifyListeners();
-    final result = await _api.login(email: email, password: password);
-    if (result['success'] == true) {
-      _user = UserModel.fromJson(result['user'] as Map<String, dynamic>);
-      _isLoading = false;
-      notifyListeners();
-      return null;
-    }
-    _isLoading = false;
-    notifyListeners();
-    return result['error'] as String;
+    return null;
   }
+
+  _isLoading = false;
+  notifyListeners();
+  return result['error'] as String;
+}
 
   Future<void> updateProfile({required String name}) async {
     final result = await _api.updateProfile(name: name);

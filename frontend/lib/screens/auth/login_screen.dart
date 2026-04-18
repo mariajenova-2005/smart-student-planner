@@ -17,18 +17,29 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() { _emailCtrl.dispose(); _passCtrl.dispose(); super.dispose(); }
+Future<void> _login() async {
+  if (!_formKey.currentState!.validate()) return;
 
-  Future<void> _login() async {
-    if (!_formKey.currentState!.validate()) return;
-    final auth = context.read<AuthProvider>();
-    final error = await auth.login(email: _emailCtrl.text.trim(), password: _passCtrl.text);
-    if (!mounted) return;
-    if (error != null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error), backgroundColor: Colors.red));
-    } else {
-      context.go('/dashboard');
-    }
+  final auth = context.read<AuthProvider>();
+
+  final error = await auth.login(
+    email: _emailCtrl.text.trim(),
+    password: _passCtrl.text,
+  );
+
+  if (!mounted) return;
+
+  if (error != null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(error), backgroundColor: Colors.red),
+    );
+  } else {
+    // ✅ NOW token is saved → safe to call API
+    await context.read<TaskProvider>().loadTasks();
+
+    context.go('/dashboard');
   }
+}
 
   @override
   Widget build(BuildContext context) {
