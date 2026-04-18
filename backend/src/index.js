@@ -9,8 +9,23 @@ const notesRoutes = require('./routes/notes');
 const app = express();
 
 // Middleware
+
+const allowedOrigins = [
+  'https://smart-student-planner-ruddy.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5000',
+  'http://10.0.2.2:3000', // Android emulator
+];
+
 app.use(cors({
-  origin: ['https://smart-student-planner-ruddy.vercel.app'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    // Also allow any vercel.app subdomain (for preview deployments)
+    if (/\.vercel\.app$/.test(origin)) return callback(null, true);
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 app.use(express.json());
